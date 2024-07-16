@@ -23,9 +23,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DamperControl.unity
     guid: 4296f1aebf7af1c499c5bb90d170e4d8
-  - enabled: 1
-    path: Assets/Scenes/FacilityUsage.unity
-    guid: 2199cc3561983ea4880a8f89c89ddbee
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 289c1b55c9541489481df5cc06664110, type: 3}
   m_UseUCBPForAssetBundles: 0
