@@ -5,8 +5,10 @@ public class TemperatureController : MonoBehaviour
 {
     public Text currentTemperature; // 현재온도
     public Text temperatureText; // 설정온도
+    public Text airConditionerStatusText; // 에어컨 상태 텍스트
     public Button UpButton;
     public Button DownButton;
+    public Toggle airConditionerToggle; // 에어컨 On/Off 토글
 
     public string objectID; // 오브젝트 고유 ID
 
@@ -14,6 +16,8 @@ public class TemperatureController : MonoBehaviour
     private int temp;
     private int minTemperature = 18; // 최소 온도
     private int maxTemperature = 30; // 최대 온도
+
+    private bool isAirConditionerOn; // 에어컨 상태
 
     void Start()
     {
@@ -32,17 +36,33 @@ public class TemperatureController : MonoBehaviour
             temp = currentTemp;
         }
 
+        // PlayerPrefs에서 에어컨 상태를 불러오기
+        string savedAirConditionerKey = "SavedAirConditioner_" + objectID;
+        if (PlayerPrefs.HasKey(savedAirConditionerKey))
+        {
+            isAirConditionerOn = PlayerPrefs.GetInt(savedAirConditionerKey) == 1;
+        }
+        else
+        {
+            isAirConditionerOn = false;
+        }
+
         // 버튼 이벤트 등록
         UpButton.onClick.AddListener(UPTemperature);
         DownButton.onClick.AddListener(DownTemperature);
+        airConditionerToggle.onValueChanged.AddListener(OnAirConditionerToggleChanged);
+
+        // 토글 상태 초기화
+        airConditionerToggle.isOn = isAirConditionerOn;
 
         // 텍스트 초기화
+        UpdateAirConditionerStatusText();
         UpdateTemperatureText();
     }
 
     void UPTemperature()
     {
-        if (temp < maxTemperature)
+        if (temp < maxTemperature && isAirConditionerOn)
         {
             temp++;
             UpdateTemperatureText();
@@ -52,7 +72,7 @@ public class TemperatureController : MonoBehaviour
 
     void DownTemperature()
     {
-        if (temp > minTemperature)
+        if (temp > minTemperature && isAirConditionerOn)
         {
             temp--;
             UpdateTemperatureText();
@@ -60,9 +80,34 @@ public class TemperatureController : MonoBehaviour
         }
     }
 
+    void OnAirConditionerToggleChanged(bool isOn)
+    {
+        isAirConditionerOn = isOn;
+        UpdateAirConditionerStatusText();
+        UpdateTemperatureText();
+        SaveAirConditionerState();
+    }
+
+    void UpdateAirConditionerStatusText()
+    {
+        if (isAirConditionerOn)
+        {
+            airConditionerStatusText.text = "On";
+            temperatureText.gameObject.SetActive(true);
+        }
+        else
+        {
+            airConditionerStatusText.text = "Off";
+            temperatureText.gameObject.SetActive(false);
+        }
+    }
+
     void UpdateTemperatureText()
     {
-        temperatureText.text = temp.ToString();
+        if (isAirConditionerOn)
+        {
+            temperatureText.text = temp.ToString();
+        }
     }
 
     void SaveTemperature()
@@ -73,9 +118,18 @@ public class TemperatureController : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    void SaveAirConditionerState()
+    {
+        // 에어컨 상태를 PlayerPrefs에 저장
+        string savedAirConditionerKey = "SavedAirConditioner_" + objectID;
+        PlayerPrefs.SetInt(savedAirConditionerKey, isAirConditionerOn ? 1 : 0);
+        PlayerPrefs.Save();
+    }
+
     void OnDisable()
     {
-        // 오브젝트가 비활성화될 때 설정 온도 저장
+        // 오브젝트가 비활성화될 때 설정 온도 및 에어컨 상태 저장
         SaveTemperature();
+        SaveAirConditionerState();
     }
 }
