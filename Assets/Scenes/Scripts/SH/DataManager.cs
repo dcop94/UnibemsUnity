@@ -15,10 +15,13 @@ public class DataManager : MonoBehaviour
     private static DataManager instance = null;
 
     private TcpClient socketConnection; // 서버와의 연결을 관리하는 변수
-    private NetworkStream networkStream; // 데이터를 송수신하는 string 변수 : 버퍼 역할
+    private static NetworkStream networkStream; // 데이터를 송수신하는 string 변수 : 버퍼 역할
     private const string serverIp = "127.0.0.1"; // 나의 IP 주소
-    private const string serverIp2 = "192.168.1.235"; // 동환님 IP 주소
+    //private const string serverIp2 = "192.168.1.235"; // 동환님 IP 주소
+    private const string serverIp2 = "192.168.20.144"; // 동환님 IP 주소
     private const int serverPort = 7777; // 서버 포트 번호
+
+    public static bool b_send = false;
 
     // 엘리베이터
     public struct EV
@@ -97,6 +100,9 @@ public class DataManager : MonoBehaviour
             //gameObject만으로도 이 스크립트가 컴포넌트로서 붙어있는 Hierarchy상의 게임오브젝트라는 뜻이지만, 
             //나는 헷갈림 방지를 위해 this를 붙여주기도 한다.
             DontDestroyOnLoad(this.gameObject);
+
+            // 소켓 생성 + 서버에 연결요청
+            ConnectToServer();
         }
         else
         {
@@ -121,7 +127,6 @@ public class DataManager : MonoBehaviour
     }
 
 
-
     void Start()
     {
         // 인스턴스 초기화
@@ -136,8 +141,6 @@ public class DataManager : MonoBehaviour
         forSocketESDataList = new List<List<DataManager.ES>>();
         forSocketVentControlDataList = new List<List<VentilControl>>();
 
-        // 소켓 생성 + 서버에 연결요청
-        ConnectToServer();
 
 
     }
@@ -183,6 +186,8 @@ public class DataManager : MonoBehaviour
 
         // Write() - 메시지 전송
         networkStream.Write(messageBytes, 0, messageBytes.Length);
+
+        b_send = true;
     }
 
     // 어플리케이션 종료 전 소켓 및 스트림 (기본 함수)
