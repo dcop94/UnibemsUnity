@@ -6,7 +6,7 @@ using UnityEngine;
 public class ES : MonoBehaviour
 {
     // DataManger 객체 생성 : 유니티 기본 Class 상속받을 함수인 경우 new 키워드 X -> 게임 오브젝트에 컴포넌트로 추가하여 인스턴스를 생성 
-    public DataManager dataManager;
+    //public DataManager dataManager;
 
     // EV 형 data 담을 list 생성 
     private List<DataManager.ES> esDataList;
@@ -38,9 +38,9 @@ public class ES : MonoBehaviour
         esDataList.Add(ESData);
 
         // 정상인 경우
-        if (dataManager != null)
+        if (DataManager.Instance != null)
         {
-            dataManager.EsData(esDataList);
+            DataManager.Instance.EsData(esDataList);
         }
 
         // dataManager 변수 초기화 안된 경우

@@ -9,10 +9,11 @@ public class Ventil : MonoBehaviour
     //public DataManager dataManager;
 
     // Sensor 스크립트를 참조하기 위한 변수 선언
-    public Sensor sensorScript;
+    // public Sensor sensorScript;
 
     // 오브젝트마다 고유한 위치ID를 설정할 수 있도록 public 변수 추가
     public int ventilID;
+    public int ventControlID;
 
     // data 담을 list 생성 
     private List<DataManager.VENTIL> ventilDataList;
@@ -47,7 +48,7 @@ public class Ventil : MonoBehaviour
         VentilControlData.m_d_id = VentilData.m_id;
 
         // 수정 필요
-        VentilControlData.m_vc_id = 0;
+        VentilControlData.m_vc_id = ventControlID;
 
         // 댐퍼 제어 값 (%)
         float controlInput = 50;

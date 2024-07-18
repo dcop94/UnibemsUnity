@@ -14,6 +14,7 @@ public class Sensor : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("Sensor InvokeRepeat");
         // 1초후에 첫 호출, 1초마다 GenerateSensorData 메서드를 호출하여 데이터 생성
         InvokeRepeating("GenerateSensorData", 1.0f, 1.0f);
     }
@@ -44,15 +45,15 @@ public class Sensor : MonoBehaviour
         Debug.Log("SENSOR");
 
         // 정상인 경우
-        if (DataManager.Instance != null)
-        {
+        //if (DataManager.Instance != null)
+        //{
             DataManager.Instance.Sensor1Data(sensorDataList);
-        }
+        //}
         // dataManager 변수 초기화 안된 경우
-        else
-        {
-            Debug.LogError("dataManager 초기화 안됨!");
-        }
+        //else
+        //{
+          //  Debug.LogError("dataManager 초기화 안됨!");
+        //}
 
         if (!FlagSet.sensor_on)
         {
